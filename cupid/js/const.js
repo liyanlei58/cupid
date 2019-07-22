@@ -1,4 +1,10 @@
 module.exports = {
+  Code: {
+    JoinActivity: {
+      VALUE: 520520,
+      MSG: "默认活动参与码"
+    }
+  },
   Gender: {
     Male: {
       VALUE: 1,
