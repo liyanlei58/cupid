@@ -1,6 +1,6 @@
 //app.js
-var init = require('pages/js/init.js');
-var userDb = require('pages/js/user.js');
+var sysUser = require('./js/db/sysUser.js');
+var init = require('./js/cloud/init.js');
 App({
   globalData: {
     openid: '',
@@ -153,14 +153,14 @@ App({
   getUserInfo: function() {
     var that = this
     //从数据库获取用户信息
-    userDb.getUserByOpenid(that.globalData.openid, function(data) {
+    sysUser.getUserByOpenid(that.globalData.openid, function(data) {
       if (data == null || data.length == 0) {
         //数据库中不存在此用户，则从微信获取用户信息
         init.getUserInfoFromWx(function(wxUserInfo) {
           //查到用户信息
           that.globalData.userInfo = wxUserInfo;
           //添加到数据库
-          userDb.addUser(wxUserInfo, function(dataId) {
+          sysUser.addUser(wxUserInfo, function(dataId) {
             if (dataId != null) { //添加成功
             } else {
               console.log("add userWxInfo fail");

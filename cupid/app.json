@@ -1,20 +1,22 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/activity/list/list",
-    "pages/activity/detail/detail",
-    "pages/score/activity/activity",
-    "pages/score/activityDetail/activityDetail",
-    "pages/score/person/person",
-    "pages/love/list/list",
-    "pages/love/person/person",
-    "pages/me/index/index",
-    "pages/me/info/info",
-    "pages/me/edit/edit",
-    "pages/me/match/match",
-    "pages/me/admin/activity/list/list",
-    "pages/me/admin/activity/detail/detail",
-    "pages/me/admin/activity/edit/edit",
+    "pages/activity/list",
+    "pages/activity/detail",
+    "pages/apply/activityList",
+    "pages/apply/activityDetail",
+    "pages/score/activityList",
+    "pages/score/activityDetail",
+    "pages/score/person",
+    "pages/love/list",
+    "pages/love/person",
+    "pages/me/index",
+    "pages/me/info",
+    "pages/me/edit",
+    "pages/me/match",
+    "pages/me/admin/activity/list",
+    "pages/me/admin/activity/detail",
+    "pages/me/admin/activity/edit",
     "pages/auth/auth"
   ],
   "tabBar": {
@@ -24,31 +26,31 @@
     "backgroundColor": "#fcf3f2",
     "list": [
       {
-        "pagePath": "pages/activity/list/list",
+        "pagePath": "pages/activity/list",
         "iconPath": "images/activity.png",
         "selectedIconPath": "images/activity-active.png",
         "text": "活动"
       },
       {
-        "pagePath": "pages/score/activity/activity",
+        "pagePath": "pages/score/activityList",
         "iconPath": "images/score.png",
         "selectedIconPath": "images/score-active.png",
         "text": "打分"
       },
       {
-        "pagePath": "pages/love/list/list",
+        "pagePath": "pages/love/list",
         "iconPath": "images/love.png",
         "selectedIconPath": "images/love-active.png",
         "text": "心动时刻"
       },
       {
-        "pagePath": "pages/me/index/index",
+        "pagePath": "pages/me/index",
         "iconPath": "images/user.png",
         "selectedIconPath": "images/user-active.png",
         "text": "我的"
       },
       {
-        "pagePath": "pages/me/index/index",
+        "pagePath": "pages/me/index",
         "iconPath": "images/user.png",
         "selectedIconPath": "images/user-active.png",
         "text": "我的"

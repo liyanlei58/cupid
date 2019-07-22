@@ -1,4 +1,5 @@
 <activity wx:if="{{PageCur=='activity'}}"></activity>
+<apply wx:if="{{PageCur=='apply'}}"></apply>
 <score wx:if="{{PageCur=='score'}}"></score>
 <love wx:if="{{PageCur=='love'}}"></love>
 <me wx:if="{{PageCur=='me'}}"></me>

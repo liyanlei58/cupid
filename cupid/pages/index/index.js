@@ -3,10 +3,11 @@ Page({
   data: {
     skin: app.globalData.skin,
     modalName: "activity",
-    PageCur: 'activity'
+    PageCur: ''
   },
   onLoad: function (options) {
     var pageCur = "activity"
+    console.log("pageCur = ", options.pageCur)
     if (options.pageCur != null){
       pageCur = "me"
     }
