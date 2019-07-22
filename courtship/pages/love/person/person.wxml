@@ -1,0 +1,61 @@
+<cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">打分</view>
+</cu-custom>
+
+
+<scroll-view scroll-y="{{modalName==null}}" class="page {{modalName!=null?'show':''}}" bindscroll="scroll" bindscrolltolower="scrollToLower">
+
+  <view class="grid col-2 text-center bg-white padding" aria-label="">
+    <view wx:if="{{person.photoId}}">
+      <image src="{{person.photoId}}" mode="aspectFill" class='cu-avatar radius xxxl'></image>
+    </view>
+    <view class="text-grey">
+      <image src="{{person.avatarUrl}}" mode="aspectFit" class='cu-avatar radius xxxl'></image>
+    </view>
+  </view>
+
+  <view class="cu-bar bg-white margin-top-sm solid-bottom">
+    <view class="action">
+      <text class="cuIcon-title text-{{skin}}"></text>基本信息
+    </view>
+  </view>
+  <view class="grid col-3 bg-white padding">
+    <view class="text-{{skin}}">{{person.nickName}}</view>
+    <view class="text-grey">{{person.birthday}}</view>
+    <view class="text-grey">{{person.job}}</view>
+
+    <view class="text-grey">{{person.hometown[0]}}</view>
+    <view class="text-grey">{{person.hometown[1]}}</view>
+    <view class="text-grey">{{person.hometown[2]}}</view>
+
+    <view class="text-grey">{{person.address}}</view>
+    <view wx:if="{{person.car == HAS_CAR}}" class="text-grey">有车</view>
+    <view class="text-grey" wx:if="{{person.house != null && person.house != 0 && person.house != 1}}">{{houseArray[person.house]}}</view>
+  </view>
+
+  <view class="cu-bar bg-white margin-top-sm solid-bottom">
+    <view class="action">
+      <text class="cuIcon-title text-{{skin}}"></text>扩展信息
+    </view>
+  </view>
+  <view class="padding bg-white">
+    <view class="flex">
+      <view class="flex-sub text-{{skin}} margin-xs">真实姓名</view>
+      <view class="flex-four margin-xs">{{person.realName}}</view>
+    </view>
+    <view class="flex">
+      <view class="flex-sub text-{{skin}} margin-xs">定居</view>
+      <view class="flex-four margin-xs">{{person.settle}}</view>
+    </view>
+    <view class="flex">
+      <view class="flex-sub text-{{skin}} margin-xs">爱好</view>
+      <view class="flex-four margin-xs">{{person.hobby}}</view>
+    </view>
+    <view class="flex">
+      <view class="flex-sub text-{{skin}} margin-xs">要求</view>
+      <view class="flex-four margin-xs">{{person.demand}}</view>
+    </view>
+  </view>
+
+</scroll-view>

@@ -1,0 +1,71 @@
+<block wx:if="{{showLoading}}">
+  <view class='cu-load load-modal'>
+    <view class='cuIcon-loading2 text-{{skin}}'></view>
+    <view class='text-{{skin}}'>玩命加载中...</view>
+  </view>
+</block>
+<block wx:else>
+
+  <cu-custom bgColor="bg-gradual-{{skin}}">
+    <view slot="content">心动时刻</view>
+  </cu-custom>
+
+  <!-- 打分的人员 -->
+  <scroll-view scroll-y="{{modalName==null}}" class="margin-top bg-white page {{modalName!=null?'show':''}} margin-bottom-xxl" bindscroll="scroll" bindscrolltolower="scrollToLower">
+
+    <view class="cu-list menu-avatar">
+      <view class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" wx:for="{{scoreList}}" wx:key="{{index}}" bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" bindtap="viewDetail" data-id="{{item.user._openid}}"
+        data-title="{{item.activity._id}}">
+
+        <view class="cu-avatar radius xl">
+          <image src="{{item.user.photoId}}" mode="aspectFill" class='cu-avatar radius xxl'></image>
+          <view class="cu-tag badge {{item.user.gender % 2 == 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'}}"></view>
+        </view>
+
+        <view class="content margin-bottom padding-lr">
+          <view class="grid col-3">
+            <view class="text-{{skin}}">{{item.score}}分</view>
+            <view>{{item.user.nickName}}</view>
+            <view>{{item.user.birthday}}</view>
+
+            <view>{{item.user.hometown[0]}}</view>
+            <view>{{item.user.hometown[1]}}</view>
+            <view>{{item.user.hometown[2]}}</view>
+
+            <view>{{item.user.job}}</view>
+            <view>{{item.user.address}}</view>
+          </view>
+          <view class="grid col-3">
+            <view>{{item.activity.name}}</view>
+            <view>{{item.activity.date}}</view>
+          </view>
+        </view>
+
+
+        <!-- <view class="action">
+          <view class="text-{{skin}} text-xs">22:20</view>
+          <view class="cu-tag round bg-grey sm">5</view>
+        </view> -->
+        <view class="move">
+          <view class="bg-red">删除</view>
+        </view>
+      </view>
+
+      <!-- hasMore start -->
+      <view class='margin-bottom'>
+        <block wx:if="{{hasMore}}">
+          <view class='cu-load'>
+            <view class='text-{{skin}}'>玩命加载中...</view>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="flex justify-center text-gray">
+            <text>没有更多内容了</text>
+          </view>
+        </block>
+      </view>
+      <!-- hasMore end -->
+    </view>
+  </scroll-view>
+
+</block>

@@ -1,0 +1,79 @@
+{
+	"miniprogramRoot": "courtship/",
+	"cloudfunctionRoot": "cloudfunctions/",
+	"setting": {
+		"urlCheck": true,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"appid": "wx29cfbced4510d4fa",
+	"projectname": "courtship",
+	"libVersion": "2.2.5",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 5,
+			"list": [
+				{
+					"id": 3,
+					"name": "me",
+					"pathName": "pages/me/index/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "editMe",
+					"pathName": "pages/me/edit/edit",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "img",
+					"pathName": "pages/img/img",
+					"query": "id=1",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "img",
+					"pathName": "pages/me/admin/activity/edit/edit",
+					"query": "id=1",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "admin_activity",
+					"pathName": "pages/me/admin/activity/list/list",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "score_activity",
+					"pathName": "pages/score/activity/activity",
+					"scene": null
+				}
+			]
+		}
+	}
+}

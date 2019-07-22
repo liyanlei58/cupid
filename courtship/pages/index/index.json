@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "activity": "/pages/activity/list/list",
+    "score": "/pages/score/activity/activity",
+    "love": "/pages/love/list/list",
+    "me": "/pages/me/index/index"
+  }
+}
