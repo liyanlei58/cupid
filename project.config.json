@@ -1,5 +1,5 @@
 {
-	"miniprogramRoot": "courtship/",
+	"miniprogramRoot": "cupid/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
 		"urlCheck": true,
@@ -9,7 +9,7 @@
 		"newFeature": true
 	},
 	"appid": "wx29cfbced4510d4fa",
-	"projectname": "courtship",
+	"projectname": "cupid",
 	"libVersion": "2.2.5",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
