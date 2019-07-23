@@ -1,4 +1,7 @@
 module.exports = {
+  Background: {
+    PINK: 'pink'
+  },
   Code: {
     JoinActivity: {
       VALUE: 520520,

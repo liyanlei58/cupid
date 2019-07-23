@@ -17,6 +17,10 @@ Page({
 
   onShow: function () {
     var that = this;
+    //设置背景颜色
+    that.setData({
+      skin: app.globalData.skin
+    })
     //查询对自己有好感的人员
     that.setData({
       scoreList: [],

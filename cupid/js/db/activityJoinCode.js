@@ -1,5 +1,5 @@
 const db = wx.cloud.database();
-
+var util = require('../util.js');
 module.exports = {
 
   //产生活动参与码
@@ -8,7 +8,7 @@ module.exports = {
     //查询所有活动参与码，若超过5分钟，则删除，有5分钟之内的则返回
     that.removeAllByActivityId(activityId, function(count){
       console.log("del code count : ", count);
-      var code = that.generateRandomCode();
+      var code = util.getRandomNum(6);
       that.addActivityCode(activityId, code, function(dataId){
         if(dataId != null){
           callback(code);//添加成功
@@ -17,16 +17,7 @@ module.exports = {
     });
   },
 
-  //查询活动参与码
-  generateRandomCode: function() {
-    var code = "";　　
-    for (var i = 0; i < 6; i++) {　　　　
-      var radom = Math.floor(Math.random() * 10);　　　　
-      code += radom;　　
-    }　　
-    console.log(code);
-    return code;
-  },
+
 
   //查询活动参与码
   getActivityCode: function(activityId, callback) {

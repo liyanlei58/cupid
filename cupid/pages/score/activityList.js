@@ -1,5 +1,5 @@
 const app = getApp();
-var activityJoin = require('../../js/db/activityJoin.js');
+var activityJoinDao = require('../../js/db/activityJoin.js');
 var util = require('../../js/util.js');
 var pageSize = 20;
 Component({
@@ -17,14 +17,20 @@ Component({
     start: 0
   },
   
-  attached() {
-    var that = this;
-    //查询活动列表
-    that.setData({
-      activityList: [],
-      start: 0
-    })
-    that.findNextPage()
+  lifetimes: {
+    //在组件实例进入页面节点树时执行
+    attached() {
+      var that = this;
+      //查询活动列表
+      that.setData({
+        skin: app.globalData.skin,
+        activityList: [],
+        start: 0
+      })
+      that.findNextPage()
+    },
+    moved: function () { },
+    detached: function () { },
   },
 
   methods: {
@@ -41,7 +47,7 @@ Component({
     findNextPage() {
       console.log("openid: ", app.globalData.openid);
       var that = this
-      activityJoin.findPageByOpenid(app.globalData.openid, that.data.start, pageSize, function (data) {
+      activityJoinDao.findPageByOpenid(app.globalData.openid, that.data.start, pageSize, function (data) {
         if (data.length == 0) {
           that.setData({
             showLoading: false,

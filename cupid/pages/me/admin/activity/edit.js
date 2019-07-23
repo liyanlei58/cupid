@@ -1,5 +1,5 @@
 let app = getApp();
-var activity = require('../../../../js/db/activity.js');
+var activityDb = require('../../../../js/db/activity.js');
 var util = require('../../../../js/util.js');
 var common = require('../../../../js/common.js');
 Page({
@@ -24,17 +24,28 @@ Page({
     var activityId = options.id;
     if (activityId != null && activityId != "undefined" && activityId != "") {
       //编辑活动
-      activity.getActivityById(activityId, function(activityDb) {
-        console.log("查询活动信息，activityDb: ", activityDb);
-        if (activityDb != null) {
+      activityDb.getActivityById(activityId, function(activity_db) {
+        console.log("查询活动信息，activity_db: ", activity_db);
+        if (activity_db != null) {
           that.setData({
-            activity: activityDb,
-            date: activityDb.date,
+            activity: activity_db,
+            date: activity_db.date,
             isAdd: false
           })
         }
       });
     }
+  },
+  
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
   },
 
   // 初始化表单
@@ -75,7 +86,7 @@ Page({
   //添加活动
   addActivity: function (activity) {
     var that = this
-    activity.addActivity(activity, function (dataId) {
+    activityDb.addActivity(activity, function (dataId) {
       if (dataId != null) { //添加成功
         //保存成功，跳转到活动列表页面
         that.toActivityList();
@@ -89,7 +100,7 @@ Page({
   //修改活动
   updateActivity: function(activityId, activity) {
     var that = this
-    activity.updateActivity(activityId, activity, function (updateCount) {
+    activityDb.updateActivity(activityId, activity, function (updateCount) {
       if (updateCount > 0) { //修改成功
         //保存成功，跳转到活动列表页面
         that.toActivityList()

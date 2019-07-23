@@ -1,6 +1,7 @@
 const app = getApp();
-var activity = require('../../js/db/activity.js');
+var activityDb = require('../../js/db/activity.js');
 var util = require('../../js/util.js');
+var common = require('../../js/common.js');
 var pageSize = 20;
 Component({
   options: {
@@ -21,19 +22,35 @@ Component({
     start: 0
   },
 
-  attached() {
-    var that = this;
-    if (app.globalData.openid) {
+  lifetimes: {
+    //在组件实例进入页面节点树时执行
+    attached() {
+      var that = this;
+      if (app.globalData.openid) {
+        that.setData({
+          skin: app.globalData.skin,
+          openid: app.globalData.openid
+        })
+      }
+      //背景设置
+      if (!app.globalData.skin) {
+        common.setBackground(app.globalData.openid, function (globalSkin) {
+          app.globalData.skin = globalSkin
+          that.setData({
+            skin: globalSkin
+          })
+        })
+      }
+
+      //查询活动列表
       that.setData({
-        openid: app.globalData.openid
+        activityList: [],
+        start: 0
       })
-    }
-    //查询活动列表
-    that.setData({
-      activityList: [],
-      start: 0
-    })
-    that.findNextPage();
+      that.findNextPage();
+    },
+    moved: function () { },
+    detached: function () { },
   },
 
   methods: {
@@ -51,7 +68,7 @@ Component({
     //查询下一页的数据
     findNextPage() {
       var that = this
-      activity.findActivity(that.data.start, pageSize, function (data) {
+      activityDb.findActivity(that.data.start, pageSize, function (data) {
         if (data.length == 0) {
           that.setData({
             showLoading: false,

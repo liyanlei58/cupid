@@ -1,5 +1,5 @@
 const app = getApp()
-var activity = require('../../../../js/db/activity.js')
+var activityDb = require('../../../../js/db/activity.js')
 var util = require('../../../../js/util.js')
 var pageSize = 20;
 Page({
@@ -32,6 +32,11 @@ Page({
   },
 
   onShow: function() {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
     this.refreshList()
   },
 
@@ -56,7 +61,7 @@ Page({
   //查询下一页的数据
   findNextPage: function() {
     var that = this
-    activity.findActivity(that.data.start, pageSize, function(data) {
+    activityDb.findActivity(that.data.start, pageSize, function(data) {
       if (data.length == 0) {
         that.setData({
           showLoading: false,
@@ -126,7 +131,7 @@ Page({
   // 删除活动
   doDelActivity: function(activityId) {
     var that = this
-    activity.getActivityById(activityId, function(activityExist) {
+    activityDb.getActivityById(activityId, function(activityExist) {
       if (activityExist == null) {
         wx.showToast({
           icon: 'none',
@@ -139,7 +144,7 @@ Page({
             title: '活动已结束，不可以删除'
           })
         } else {
-          activity.removeActivityById(activityId, function(count) {
+          activityDb.removeActivityById(activityId, function(count) {
             if (count == 0) {
               wx.showToast({
                 icon: 'none',

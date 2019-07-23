@@ -1,5 +1,5 @@
 const app = getApp();
-var sysUser = require('../../js/db/sysUser.js')
+var sysUserDb = require('../../js/db/sysUser.js')
 Page({
   data: {
     skin: app.globalData.skin,
@@ -11,7 +11,7 @@ Page({
     var that = this;
     //用户信息为空
     if(this.data.userInfo == ""){
-      sysUser.getUserByOpenid(app.globalData.openid, function (data) {
+      sysUserDb.getUserByOpenid(app.globalData.openid, function (data) {
         console.log("查询用户信息，data: ", data);
         if (data.length > 0) {
           app.globalData.userInfo = data[0];
@@ -27,6 +27,17 @@ Page({
       });
     }
     
+  },
+  
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
   },
 
   toEdit: function (e) {

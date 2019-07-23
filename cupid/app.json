@@ -14,6 +14,8 @@
     "pages/me/info",
     "pages/me/edit",
     "pages/me/match",
+    "pages/me/setting/index",
+    "pages/me/setting/background",
     "pages/me/admin/activity/list",
     "pages/me/admin/activity/detail",
     "pages/me/admin/activity/edit",

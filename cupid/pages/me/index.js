@@ -1,7 +1,5 @@
 const app = getApp();
-var activity = require('../../js/db/activity.js');
-var sysUser = require('../../js/db/sysUser.js');
-var pageSize = 20;
+var sysUserDb = require('../../js/db/sysUser.js');
 Component({
   options: {
     addGlobalClass: true,
@@ -14,9 +12,27 @@ Component({
     hasAdmin: false
   },
 
-  attached() {
-    var that = this
-    that.init()
+  lifetimes: {
+    //在组件实例进入页面节点树时执行
+    attached() {
+      var that = this
+      //设置背景
+      this.setData({
+        skin: app.globalData.skin,
+      })
+      that.init()
+    },
+    moved: function () { },
+    detached: function () { },
+  },
+
+  pageLifetimes: {
+    show: function () {
+      //设置背景
+      this.setData({
+        skin: app.globalData.skin,
+      })
+    }
   },
 
   methods: {
@@ -35,7 +51,7 @@ Component({
           hasAdmin: app.globalData.userInfo.hasAdmin
         })
       } else {
-        sysUser.getUserByOpenid(app.globalData.openid, function (userList) {
+        sysUserDb.getUserByOpenid(app.globalData.openid, function (userList) {
           if (userList.length > 0 && userList[0].hasAdmin != null) {
             that.setData({
               hasAdmin: userList[0].hasAdmin
@@ -54,6 +70,12 @@ Component({
     toMeMatch() {
       wx.navigateTo({
         url: '../me/match'
+      })
+    },
+
+    toSetting() {
+      wx.navigateTo({
+        url: '../me/setting/index'
       })
     },
 

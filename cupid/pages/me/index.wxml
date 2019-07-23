@@ -11,6 +11,10 @@
     <text class="text-black text-xl">互相倾慕</text>
   </view>
 
+  <view class="cu-item arrow" bindtap="toSetting">
+    <text class="text-black text-xl">设置</text>
+  </view>
+
   <view wx:if='{{hasAdmin}}' class="cu-item arrow" bindtap="toActivityAdmin">
     <text class="text-black text-xl">活动管理</text>
   </view>

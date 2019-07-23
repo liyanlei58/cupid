@@ -1,6 +1,6 @@
 const app = getApp();
-var sysUser = require('../../js/db/sysUser.js');
-var init = require('../../js/cloud/init.js');
+var common = require('../../js/common.js');
+var sysUserDb = require('../../js/db/sysUser.js');
 Page({
   data: {
     //判断小程序的API，回调，参数，组件等是否在当前版本可用。
@@ -10,6 +10,26 @@ Page({
   onLoad: function () {
     
   },
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+      if (!app.globalData.skin) {
+          common.setBackground(app.globalData.openid, function (globalSkin) {
+              app.globalData.skin = globalSkin
+              that.setData({
+                  skin: globalSkin
+              })
+          })
+      }else{
+          var that = this
+          that.setData({
+              skin: app.globalData.skin
+          })
+      }
+
+  },
 
   //获取用户信息
   bindGetUserInfo: function (e) {
@@ -18,10 +38,10 @@ Page({
       var that = this;
       var wxUserInfo = e.detail.userInfo;
       //检查是否存在，不存在则添加，存在则修改。插入db
-      sysUser.getUserByOpenid(app.globalData.openid, function (data) {
+      sysUserDb.getUserByOpenid(app.globalData.openid, function (data) {
         if (data.length == 0) {
           //用户为空，添加
-          sysUser.addUser(wxUserInfo, function (dataId) {
+          sysUserDb.addUser(wxUserInfo, function (dataId) {
             if (dataId != null) {//添加成功
               wxUserInfo._id = dataId;
               app.globalData.userInfo = wxUserInfo;
@@ -34,7 +54,7 @@ Page({
           });
         } else {
           //用户不为空，修改
-          sysUser.updateUser(app.globalData, wxUserInfo, function (updateCount) {
+          sysUserDb.updateUser(app.globalData, wxUserInfo, function (updateCount) {
             console.log("update wxUserInfo", wxUserInfo);
             if (updateCount > 0) {//修改成功
               var oldUser = data[0];

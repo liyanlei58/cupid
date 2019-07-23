@@ -1,11 +1,10 @@
 const app = getApp();
-var sysUser = require('../../js/db/sysUser.js')
-var activityDb = require('../../js/db/activity.js')
-var scoreDb = require('../../js/db/score.js')
-var matchDb = require('../../js/db/match.js')
+var sysUserDao = require('../../js/db/sysUser.js')
+var activityDao = require('../../js/db/activity.js')
+var scoreDao = require('../../js/db/score.js')
+var matchDao = require('../../js/db/match.js')
 var msg = require('../../js/cloud/message.js')
-var util = require('../../js/util.js')
-var scoreFormid = require('../../js/db/scoreFormid.js')
+var scoreFormidDao = require('../../js/db/scoreFormid.js')
 var Const = require('../../js/const.js')
 var common = require('../../js/common.js')
 
@@ -54,10 +53,21 @@ Page({
 
   },
 
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
+  },
+  
   //获取活动信息
   getActivityById: function (activityId) {
     var that = this;
-    activityDb.getActivityById(activityId, function(data){
+    activityDao.getActivityById(activityId, function(data){
       if(data != null){
         that.setData({
           activity: data
@@ -66,10 +76,18 @@ Page({
     })
   },
 
+  ViewImage(e) {
+    var cur = e.currentTarget.dataset.url
+    wx.previewImage({
+      urls: [cur],
+      current: cur
+    });
+  },
+  
   //获取人员信息、打分信息
   getPersonByOpenidAndScore: function(personOpenid, activityId) {
     var that = this;
-    sysUser.getUserByOpenid(personOpenid, function(data) {
+    sysUserDao.getUserByOpenid(personOpenid, function(data) {
       if (data.length > 0) {
         that.setData({
           person: data[0]
@@ -87,7 +105,7 @@ Page({
     var that = this;
     var userId = that.data.person._id;
     //查询是否打过分
-    scoreDb.findScoreByActivityIdAndOpenidAndUserId(activityId, app.globalData.openid, userId, function(scoreList) {
+    scoreDao.findScoreByActivityIdAndOpenidAndUserId(activityId, app.globalData.openid, userId, function(scoreList) {
       if (scoreList.length > 0) {
         //本次活动已经打过分
         that.setData({
@@ -122,19 +140,19 @@ Page({
     }
 
     //从数据库中取出
-    scoreFormid.getListByActIdAndPersonId(that.data.activity._id, app.globalData.openid, function (dataList) {
+    scoreFormidDao.getListByActIdAndPersonId(that.data.activity._id, app.globalData.openid, function (dataList) {
       if (dataList.length == 0) {
         //没有值
-        scoreFormid.addOne(scoreFormid, function () { });
+        scoreFormidDao.addOne(scoreFormid, function () { });
         return
       }
       //有值
-      scoreFormid.updateOne(scoreFormid, dataList[0]._id, function () { });
+      scoreFormidDao.updateOne(scoreFormid, dataList[0]._id, function () { });
     })
     
     
 
-    scoreDb.findCountByActivityIdAndOpenid(activityId, app.globalData.openid, function(total) {
+    scoreDao.findCountByActivityIdAndOpenid(activityId, app.globalData.openid, function(total) {
       //校验打分的条数,一次活动最多给5个人打分
       if (total >= app.globalData.scoreCount) {
         wx.showToast({
@@ -157,14 +175,14 @@ Page({
     var userId = that.data.person._id;
     console.log(activityId);
     //查询是否打过分
-    scoreDb.findScoreByActivityIdAndOpenidAndUserId(activityId, app.globalData.openid, userId, function(scoreList) {
+    scoreDao.findScoreByActivityIdAndOpenidAndUserId(activityId, app.globalData.openid, userId, function(scoreList) {
       console.log("doScore: activityId - scoreList ", activityId, scoreList);
       if (scoreList.length == 0) {
         //本次活动没有打过分 - add
         score.activity = that.data.activity;
         score.user = that.data.person;
         score.createTime = new Date();
-        scoreDb.addScore(score, function(scoreId) {
+        scoreDao.addScore(score, function(scoreId) {
           if (scoreId != null) {
             score._id = scoreId;
             score._openid = app.globalData.openid
@@ -178,7 +196,7 @@ Page({
         //本次活动已经打过分 - update
         var scoreId = scoreList[0]._id;
         score.updateTime = new Date();
-        scoreDb.updateScore(scoreId, score, function(count) {
+        scoreDao.updateScore(scoreId, score, function(count) {
           if (count > 0) {
             score._id = scoreId;
             score.activity = that.data.activity;
@@ -256,7 +274,7 @@ Page({
   oldScoreGteNiceScoreAndNewScoreLtNiceScore: function(oldScoreObj, newScoreObj) {
     var that = this;
     //老的打分是否有匹配
-    matchDb.findMatchByScoreId(oldScoreObj._id, function(matchList) {
+    matchDao.findMatchByScoreId(oldScoreObj._id, function(matchList) {
       //(2-1-1)老的打分没有match
       if (matchList.length == 0) {
         return;
@@ -276,7 +294,7 @@ Page({
             //(2-1-2-1)匹配失败
             var length = matchList.length;
             for (var i = 0; i < length; i++) {
-              matchDb.removeMatchById(matchList[i]._id);
+              matchDao.removeMatchById(matchList[i]._id);
             }
             return;
           }
@@ -284,7 +302,7 @@ Page({
           //(2-1-2-2)匹配成功
           var length = matchList.length;
           for (var i = 0; i < length; i++) {
-            matchDb.removeMatchById(matchList[i]._id);
+            matchDao.removeMatchById(matchList[i]._id);
             that.getScoreAB(matchList[i], oldScoreObj._id, function (scoreA, scoreB) {
               that.addMatch(aToBMaxScoreObj, scoreB, false);
             });
@@ -301,7 +319,7 @@ Page({
   oldScoreGteNiceScoreAndNewScoreGteNiceScore: function(oldScoreObj, newScoreObj) {
     var that = this;
     //老的打分是否有匹配
-    matchDb.findMatchByScoreId(oldScoreObj._id, function(matchList) {
+    matchDao.findMatchByScoreId(oldScoreObj._id, function(matchList) {
       //(2-2-1)老的打分没有match
       if (matchList.length == 0) {
         return;
@@ -380,7 +398,7 @@ Page({
         _id: userId
       }
     }
-    scoreDb.findScoreByQuery(query, function(scoreList) {
+    scoreDao.findScoreByQuery(query, function(scoreList) {
       if (scoreList.length == 0) {
         console.log("没有查到[openid - > userId]的打分记录", openid, userId);
         //没有查到相互打分
@@ -410,7 +428,7 @@ Page({
       score2: scoreObj2,
       createTime: new Date()
     }
-    matchDb.addMatch(match, function(matchId) {
+    matchDao.addMatch(match, function(matchId) {
       if (matchId != null && isShowMatch) { //保存成功
         that.showMatch(scoreObj1, scoreObj2);
       }
@@ -420,10 +438,10 @@ Page({
   //提示匹配成功
   showMatch: function (scoreObj1, scoreObj2) {
     var that = this;
-    var index = Math.ceil(Math.random() * matchDb.matchMsgArray.length);
+    var index = Math.ceil(Math.random() * matchDao.matchMsgArray.length);
     wx.showModal({
       title: '匹配成功 - 赶紧加微信，一起去脱单吧',
-      content: matchDb.matchMsgArray[index],
+      content: matchDao.matchMsgArray[index],
       showCancel: false,
       confirmText: '确定',
       success: function(res) {
@@ -435,17 +453,17 @@ Page({
 
     //发送匹配消息 - 一个表单只能发送一条消息，所以这里给对方发送消息，不给自己发消息了
     if (scoreObj1.user._openid == that.data.person._openid){//给被打分的人person发送消息
-      that.sendOneMsg(scoreObj2.user, scoreObj1.user, matchDb.matchMsgArray[index]);
+      that.sendOneMsg(scoreObj2.user, scoreObj1.user, matchDao.matchMsgArray[index]);
     }else{
-      that.sendOneMsg(scoreObj1.user, scoreObj2.user, matchDb.matchMsgArray[index]);
+      that.sendOneMsg(scoreObj1.user, scoreObj2.user, matchDao.matchMsgArray[index]);
     }
   },
 
   sendOneMsg: function (fromUser, toUser, tips) {
     var that = this
-    var index = Math.ceil(Math.random() * matchDb.matchMsgArray.length);
+    var index = Math.ceil(Math.random() * matchDao.matchMsgArray.length);
     //从数据库中取出
-    scoreFormid.getListByActIdAndPersonId(that.data.activity._id, toUser._openid, function(dataList){
+    scoreFormidDao.getListByActIdAndPersonId(that.data.activity._id, toUser._openid, function(dataList){
       if(dataList.length == 0){
         //没有值
         console.log("formId不存在")
@@ -479,7 +497,7 @@ Page({
       score2: scoreObj2,
       updateTime: new Date()
     }
-    matchDb.updateMatch(match, function(count) {
+    matchDao.updateMatch(match, function(count) {
       if (count > 0) { //保存成功
         console.log("匹配结果更新成功");
       }

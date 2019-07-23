@@ -1,7 +1,6 @@
 let app = getApp();
-var sysUser = require('../../js/db/sysUser.js');
-var img = require('../../js/img.js');
-var init = require('../../js/cloud/init.js');
+var sysUserDb = require('../../js/db/sysUser.js');
+var imgUtil = require('../../js/img.js');
 var common = require('../../js/common.js');
 var Const = require('../../js/const.js');
 
@@ -10,6 +9,7 @@ Page({
     FEMALE: Const.Gender.Female.VALUE,
     HAS_CAR: Const.Car.Have.VALUE,
     skin: app.globalData.skin,
+    imgSkin: "gray",
     modalName: "me",
     imgList: [],
     birthday: '1990',
@@ -18,6 +18,23 @@ Page({
     houseArray: ['请选择', '无房', '北京有房', '北京周边有房', '天津有房', '老家有房', '其他城市有房'],
     photoId: '',
     userInfo: ''
+  },
+
+  /**
+  * 生命周期函数--监听页面显示
+  */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin,
+      imgSkin: app.globalData.skin
+    })
+    if(that.data.photoId){
+      that.setData({
+        imgSkin: 'gray'
+      })
+    }
   },
 
   bindHouseChange: function(e) {
@@ -44,13 +61,15 @@ Page({
       userInfo: app.globalData.userInfo
     });
     //用户信息
-    sysUser.getUserByOpenid(app.globalData.openid, function (data) {
+    sysUserDb.getUserByOpenid(app.globalData.openid, function (data) {
       console.log("查询用户信息，data: ", data);
       if (data.length > 0) {
         app.globalData.userInfo = data[0];
         that.setData({
           userInfo: data[0],
-          photoId: data[0].photoId
+          photoId: data[0].photoId,
+          imgList: [data[0].photoId],
+          imgSkin: 'gray'
         })
         console.log(app.globalData.userInfo);
         that.initForm();
@@ -59,9 +78,10 @@ Page({
   },
 
   ViewImage(e) {
+    var cur = e.currentTarget.dataset.url
     wx.previewImage({
-      urls: this.data.photoId,
-      current: e.currentTarget.dataset.url
+      urls: this.data.imgList,
+      current: cur
     });
   },
 
@@ -74,8 +94,11 @@ Page({
       success: res => {
         if (res.confirm) {
           this.setData({
-            photoId: ''
+            photoId: '',
+            imgList:[],
+            imgSkin: app.globalData.skin
           })
+
         }
       }
     })
@@ -84,11 +107,18 @@ Page({
   // 上传图片
   uploadPhoto: function() {
     var that = this
-    img.doUpload(function(res) {
+    if(that.data.photoId){
+      common.toastError("已上传图片，若想重新上传，请先删除已上传图片")
+      return
+    }
+    imgUtil.doUpload(function(res) {
       if (res.statusCode == 200) {
         that.setData({
-          photoId: res.fileID
+          photoId: res.fileID,
+          imgList: [res.fileID],
+          imgSkin: "gray"
         })
+        console.log(that.data.imgSkin)
       }
     })
   },
@@ -140,15 +170,18 @@ Page({
       common.toastError("请输入住址")
       return
     }
+    if (that.data.photoId == "") {
+      common.toastError("请上传照片")
+      return
+    }
 
     if (userInfo.house == "请选择") {
       userInfo.house == null;
     }
-    
     userInfo.photoId = that.data.photoId;
     //微信昵称
     userInfo.nickName = userInfo.nickName;
-    sysUser.getUserByOpenid(app.globalData.openid, function(data) {
+    sysUserDb.getUserByOpenid(app.globalData.openid, function(data) {
       if (data.length == 0) {
         //用户为空，添加
         that.addUser(userInfo)
@@ -162,7 +195,7 @@ Page({
 
   //添加用户
   addUser: function (userInfo) {
-    sysUser.addUser(userInfo, function (dataId) {
+    sysUserDb.addUser(userInfo, function (dataId) {
       if (dataId != null) { //添加成功
         userInfo._id = dataId;
         app.globalData.userInfo = userInfo;
@@ -178,7 +211,7 @@ Page({
   //修改用户
   updateUser: function (userInfo) {
     var that = this
-    sysUser.updateUser(app.globalData, userInfo, function (updateCount) {
+    sysUserDb.updateUser(app.globalData, userInfo, function (updateCount) {
       if (updateCount > 0) { //修改成功
         var glbUserInfo = app.globalData.userInfo;
         userInfo.nickName = glbUserInfo.nickName;

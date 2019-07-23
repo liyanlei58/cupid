@@ -1,12 +1,11 @@
 const app = getApp();
-var sysUser = require('../../js/db/sysUser.js');
-var activity = require('../../js/db/activity.js');
-var activityJoinCode = require('../../js/db/activityJoinCode.js');
-var activityJoin = require('../../js/db/activityJoin.js');
+var sysUserDb = require('../../js/db/sysUser.js');
+var activityDb = require('../../js/db/activity.js');
+var activityJoinCodeDb = require('../../js/db/activityJoinCode.js');
+var activityJoinDb = require('../../js/db/activityJoin.js');
 var util = require('../../js/util.js');
 var Const = require('../../js/const.js');
 var common = require('../../js/common.js');
-var pageSize = 20;
 Page({
   data: {
     skin: app.globalData.skin,
@@ -45,6 +44,17 @@ Page({
 
   },
 
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
+  },
+
   formReset: function() {
     console.log('form发生了reset事件')
   },
@@ -52,7 +62,7 @@ Page({
   // 查询活动详情
   getActivity: function(activityId) {
     var that = this;
-    activity.getActivityById(activityId, function(data) {
+    activityDb.getActivityById(activityId, function(data) {
       if (data != null || data != '') {
         var contentstr = data.content
         if (contentstr != null && contentstr != "") {
@@ -74,7 +84,7 @@ Page({
     var that = this;
     var openid = app.globalData.openid;
     if (openid != null) {
-      activityJoin.getActivityUser(activityId, openid, function(data) {
+      activityJoinDb.getActivityUser(activityId, openid, function(data) {
         if (data.length > 0) {
           that.setData({
             joined: true
@@ -105,7 +115,7 @@ Page({
       that.doJoinActivity(userInfo)
       return
     }
-    activityJoinCode.getActivityCode(that.data.activity._id, function(realCode) {
+    activityJoinCodeDb.getActivityCode(that.data.activity._id, function(realCode) {
       //校验活动参与码
       if (realCode == null || realCode != code) {
         wx.showToast({
@@ -144,7 +154,7 @@ Page({
   queryUserAndJoin: function(activity) {
     var that = this;
     //用户信息为空，查询用户
-    sysUser.getUserByOpenid(app.globalData.openid, function(data) {
+    sysUserDb.getUserByOpenid(app.globalData.openid, function(data) {
       if (data == null || data.length == 0) {
         that.toastPersonInfoIsNull();
       } else {
@@ -167,7 +177,7 @@ Page({
     };
     console.log("activity_join add : ", activity_join);
     var that = this;
-    activityJoin.addActivityUser(activity_join, function(dataId) {
+    activityJoinDb.addActivityUser(activity_join, function(dataId) {
       if (dataId != null) {
         that.setData({
           joined: true

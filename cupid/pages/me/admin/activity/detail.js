@@ -1,6 +1,6 @@
 const app = getApp();
-var activity = require('../../../../js/db/activity.js');
-var activityJoinCode = require('../../../../js/db/activityJoinCode.js');
+var activityDb = require('../../../../js/db/activity.js');
+var activityJoinCodeDb = require('../../../../js/db/activityJoinCode.js');
 var util = require('../../../../js/util.js');
 
 const db = wx.cloud.database();
@@ -38,11 +38,22 @@ Page({
     this.getActivity(activityId);
 
   },
+  
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
+  },
 
   // 查询活动详情
   getActivity: function(activityId) {
     var that = this;
-    activity.getActivityById(activityId, function(data) {
+    activityDb.getActivityById(activityId, function(data) {
       if (data != null || data != '') {
         var contentstr = data.content
         if (contentstr != null && contentstr != ""){
@@ -62,7 +73,7 @@ Page({
   // 生成活动参与码
   generateCode: function(e) {
     var that = this;
-    activityJoinCode.generateActivityCode(that.data.activity._id, function (code) {
+    activityJoinCodeDb.generateActivityCode(that.data.activity._id, function (code) {
       if (code != null) {
         that.setData({
           code: code
@@ -70,45 +81,6 @@ Page({
       }
     });
   },
-
-
-  // 删除活动
-  // removeActivity: function (e) {
-  //   var that = this;
-  //   activity.getActivityById(that.data.activity._id, function (activityExist) {
-  //     if (activityExist == null){
-  //       wx.showToast({
-  //         icon: 'none',
-  //         title: '活动不存在'
-  //       })
-  //     }else{
-  //       var now = util.formatDay(new Date());
-  //       if (activityExist.date <= now){
-  //         wx.showToast({
-  //           icon: 'none',
-  //           title: '活动已结束，不可以删除'
-  //         })
-  //       }else{
-  //         activity.removeActivityById(that.data.activity._id, function (count) {
-  //           if (count == 0) {
-  //             wx.showToast({
-  //               icon: 'none',
-  //               title: '删除失败'
-  //             })
-  //           } else {
-  //             wx.showToast({
-  //               title: '删除成功'
-  //             })
-  //             wx.redirectTo({
-  //               url: '../list/list'
-  //             })
-  //           }
-  //         });
-  //       }
-  //     }
-  //   })
-    
-  // },
 
   
 

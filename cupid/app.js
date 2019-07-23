@@ -1,13 +1,14 @@
 //app.js
-var sysUser = require('./js/db/sysUser.js');
+var sysUserDb = require('./js/db/sysUser.js');
 var init = require('./js/cloud/init.js');
+var Const = require('./js/const.js');
 App({
   globalData: {
     openid: '',
     scoreCount: 5, //一次活动最多给5个人打分
     niceScore: 60, //打分超过60，代表有好感
     userInfo: '',
-    skin: 'pink',
+    skin: '',
     ColorList: [{
       title: '嫣红',
       name: 'red',
@@ -108,6 +109,7 @@ App({
         that.getUserInfo()
       })
     }, function() {
+      that.globalData.skin = Const.Background.PINK
       //未授权，跳转到授权页面
       that.toAuth();
     })
@@ -153,14 +155,14 @@ App({
   getUserInfo: function() {
     var that = this
     //从数据库获取用户信息
-    sysUser.getUserByOpenid(that.globalData.openid, function(data) {
+    sysUserDb.getUserByOpenid(that.globalData.openid, function(data) {
       if (data == null || data.length == 0) {
         //数据库中不存在此用户，则从微信获取用户信息
         init.getUserInfoFromWx(function(wxUserInfo) {
           //查到用户信息
           that.globalData.userInfo = wxUserInfo;
           //添加到数据库
-          sysUser.addUser(wxUserInfo, function(dataId) {
+          sysUserDb.addUser(wxUserInfo, function(dataId) {
             if (dataId != null) { //添加成功
             } else {
               console.log("add userWxInfo fail");

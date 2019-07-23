@@ -7,11 +7,11 @@
 <scroll-view scroll-y="{{modalName==null}}" class="page {{modalName!=null?'show':''}}" bindscroll="scroll" bindscrolltolower="scrollToLower">
 
   <view class="grid col-2 text-center bg-white padding" aria-label="">
-    <view wx:if="{{person.photoId}}">
+    <view class="text-grey" wx:if="{{person.photoId}}" bindtap="ViewImage" data-url="{{person.photoId}}">
       <image src="{{person.photoId}}" mode="aspectFill" class='cu-avatar radius xxxl'></image>
     </view>
-    <view class="text-grey">
-      <image src="{{person.avatarUrl}}" mode="aspectFit" class='cu-avatar radius xxxl'></image>
+    <view class="text-grey" wx:if="{{person.avatarUrl}}" bindtap="ViewImage" data-url="{{person.avatarUrl}}">
+      <image src="{{person.avatarUrl}}" mode="aspectFill" class='cu-avatar radius xxxl'></image>
     </view>
   </view>
 

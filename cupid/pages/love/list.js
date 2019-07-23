@@ -14,15 +14,21 @@ Component({
     showLoading: true,
     start: 0
   },
-
-  attached() {
-    var that = this;
-    //查询被打分人员
-    that.setData({
-      scoreList: [],
-      start: 0
-    })
-    that.findNextPage();
+  
+  lifetimes: {
+    //在组件实例进入页面节点树时执行
+    attached() {
+      var that = this
+      //查询被打分人员
+      that.setData({
+        skin: app.globalData.skin,
+        scoreList: [],
+        start: 0
+      })
+      that.findNextPage();
+    },
+    moved: function () { },
+    detached: function () { },
   },
 
   methods: {

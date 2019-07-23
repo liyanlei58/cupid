@@ -1,5 +1,5 @@
 const app = getApp();
-var sysUser = require('../../js/db/sysUser.js')
+var sysUserDb = require('../../js/db/sysUser.js')
 var common = require('../../js/common.js')
 var Const = require('../../js/const.js')
 
@@ -28,10 +28,21 @@ Page({
 
   },
 
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
+  },
+
   //获取人员信息
   getPersonByOpenid: function(personOpenid, activityId) {
     var that = this;
-    sysUser.getUserByOpenid(personOpenid, function(data) {
+    sysUserDb.getUserByOpenid(personOpenid, function(data) {
       if (data.length > 0) {
         that.setData({
           person: data[0]
@@ -41,7 +52,13 @@ Page({
     });
   },
 
-  
+  ViewImage(e) {
+    var cur = e.currentTarget.dataset.url
+    wx.previewImage({
+      urls: [cur],
+      current: cur
+    });
+  },
 
 
 

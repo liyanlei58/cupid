@@ -32,14 +32,14 @@
     <view class='cuIcon-cu-image'>
       <text class="cuIcon-like{{PageCur=='love'?('fill text-' + skin):' text-gray'}}"></text>
     </view>
-    <view class="{{PageCur=='love'?'text-{{skin}}':'text-gray'}}">心动时刻</view>
+    <view class="{{PageCur=='love'?('text-' + skin):'text-gray'}}">心动时刻</view>
   </view>
 
   <view class="action" bindtap="NavChange" data-cur="me">
     <view class='cuIcon-cu-image'>
-      <text class="cuIcon-activity{{PageCur=='me'?('fill text-' + skin):' text-gray'}}"></text>
+      <text class="cuIcon-people{{PageCur=='me'?('fill text-' + skin):' text-gray'}}"></text>
     </view>
-    <view class="{{PageCur=='me'?'text-{{skin}}':'text-gray'}}">我的</view>
+    <view class="{{PageCur=='me'?('text-' + skin):'text-gray'}}">我的</view>
   </view>
 
 </view>

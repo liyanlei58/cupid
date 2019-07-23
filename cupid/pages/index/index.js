@@ -1,4 +1,5 @@
 const app = getApp()
+var common = require('../../js/common.js');
 Page({
   data: {
     skin: app.globalData.skin,
@@ -6,13 +7,35 @@ Page({
     PageCur: ''
   },
   onLoad: function (options) {
+    var that = this
     var pageCur = "activity"
-    console.log("pageCur = ", options.pageCur)
     if (options.pageCur != null){
       pageCur = "me"
     }
-    this.setData({
+    that.setData({
       PageCur: pageCur
+    })
+
+    //背景设置
+    if (!app.globalData.skin) {
+      common.setBackground(app.globalData.openid, function (globalSkin) {
+        app.globalData.skin = globalSkin
+        that.setData({
+          skin: globalSkin
+        })
+      })
+    }
+
+  },
+  
+  /**
+     * 生命周期函数--监听页面显示
+     */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
     })
   },
 

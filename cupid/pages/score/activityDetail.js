@@ -1,8 +1,7 @@
 const app = getApp();
-var sysUser = require('../../js/db/sysUser.js');
-var activity = require('../../js/db/activity.js');
-var activityJoin = require('../../js/db/activityJoin.js');
-const db = wx.cloud.database();
+var sysUserDb = require('../../js/db/sysUser.js');
+var activityDao = require('../../js/db/activity.js');
+var activityJoinDb = require('../../js/db/activityJoin.js');
 var pageSize = 20;
 Page({
   data: {
@@ -41,11 +40,21 @@ Page({
     this.findNextPage(activityId);
 
   },
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
+  },
 
   // 查询活动详情
   getActivity: function(activityId) {
     var that = this;
-    activity.getActivityById(activityId, function(data) {
+    activityDao.getActivityById(activityId, function(data) {
       if (data != null || data != '') {
         var contentstr = data.content
         if (contentstr != null && contentstr != "") {
@@ -70,7 +79,7 @@ Page({
   //查询下一页的数据
   findNextPage: function (activityId) {
     var that = this
-    activityJoin.findPageActivityUser(activityId, that.data.start, pageSize, function(data) {
+    activityJoinDb.findPageActivityUser(activityId, that.data.start, pageSize, function(data) {
       if (data.length == 0) {
         that.setData({
           showLoading: false,
@@ -109,7 +118,6 @@ Page({
   //参加活动 - 点击参加活动btn
   joinActivity: function() {
     var that = this;
-    var activity_join = {};
     var userInfo = app.globalData.userInfo;
     if (userInfo == null) {
       that.toastPersonInfoIsNull();
@@ -118,7 +126,7 @@ Page({
 
     if (userInfo.hometown == null || userInfo.job == null || userInfo.birthday == null) {
       //用户信息为空，查询用户
-      sysUser.getUserByOpenid(app.globalData.openid, function(data) {
+      sysUserDb.getUserByOpenid(app.globalData.openid, function(data) {
         if (data == null || data.length == 0) {
           that.toastPersonInfoIsNull();
         } else {
@@ -154,9 +162,8 @@ Page({
       activity: activity,
       user: user
     };
-    console.log("activity_join add : ", activity_join);
     var that = this;
-    activityJoin.addActivityUser(activity_join, function(dataId) {
+    activityJoinDb.addActivityUser(activity_join, function(dataId) {
       if (dataId != null) {
         that.setData({
           joined: true
