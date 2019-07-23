@@ -1,0 +1,10 @@
+<cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">我的 - 设置</view>
+</cu-custom>
+
+<view class="cu-list menu sm-border card-menu margin-top-xl">
+  <view class="cu-item arrow" bindtap="toBackground">
+    <text class="text-black text-xl">背景设置</text>
+  </view>
+</view>
