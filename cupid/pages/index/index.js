@@ -17,7 +17,7 @@ Page({
     })
 
     //背景设置
-    if (!app.globalData.skin) {
+    if (app.globalData.openid != "" && app.globalData.skin == "") {
       common.setBackground(app.globalData.openid, function (globalSkin) {
         app.globalData.skin = globalSkin
         that.setData({
@@ -27,7 +27,7 @@ Page({
     }
 
   },
-  
+
   /**
      * 生命周期函数--监听页面显示
      */

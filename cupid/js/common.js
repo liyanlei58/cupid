@@ -2,6 +2,23 @@ var settingBg = require('db/settingBg.js');
 var Const = require('./const.js');
 
 module.exports = {
+
+  //调用微信接口检查是否授权
+  checkAuthFromWx: function (authCallback, noAuthCallback) {
+    var that = this;
+    wx.getSetting({
+      success: function (res) {
+        if (res.authSetting['scope.userInfo']) {
+          //已经授权
+          authCallback()
+        } else {
+          //未授权
+          noAuthCallback()
+        }
+      }
+    });
+  },
+  
   toastSuccess: function (msg) {
     wx.showToast({
       title: msg

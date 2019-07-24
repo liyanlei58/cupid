@@ -111,7 +111,7 @@ Page({
     var that = this;
     var ds = e.currentTarget.dataset;
     wx.navigateTo({
-      url: '../person?personOpenid=' + ds.id + '&activityId=' + that.data.activity._id
+      url: './person?personOpenid=' + ds.id + '&activityId=' + that.data.activity._id
     })
   },
 

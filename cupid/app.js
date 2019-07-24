@@ -2,6 +2,7 @@
 var sysUserDb = require('./js/db/sysUser.js');
 var init = require('./js/cloud/init.js');
 var Const = require('./js/const.js');
+var common = require('./js/common.js');
 App({
   globalData: {
     openid: '',
@@ -102,7 +103,7 @@ App({
     }
 
     //检查是否授权, 若未授权，则跳转到授权页面；否则获取用户信息
-    that.checkAuthFromWx(function() {
+    common.checkAuthFromWx(function() {
       //已经授权
       that.getOpenid(function(openid) {
         //获取用户信息
@@ -126,22 +127,6 @@ App({
 
   },
 
-  //调用微信接口检查是否授权
-  checkAuthFromWx: function(authCallback, noAuthCallback) {
-    var that = this;
-    wx.getSetting({
-      success: function(res) {
-        if (res.authSetting['scope.userInfo']) {
-          //已经授权
-          authCallback()
-        } else {
-          //未授权
-          noAuthCallback()
-        }
-      }
-    });
-  },
-
   //获取openid
   getOpenid: function(callback) {
     var that = this
@@ -151,7 +136,7 @@ App({
     })
   },
 
-  //获取userInfo, 缓存 -- > 微信
+  //获取userInfo, 
   getUserInfo: function() {
     var that = this
     //从数据库获取用户信息
@@ -172,18 +157,19 @@ App({
         return;
       }
       //数据库中存在用户信息
-      var userInfo = data[0];
-      var glbUserInfo = that.globalData.userInfo;
+      that.globalData.userInfo = data[0]
+      var glbUserInfo = data[0]
       if (glbUserInfo.nickName == null || glbUserInfo.avatarUrl) {
         init.getUserInfoFromWx(function(wxUserInfo) {
           //查到用户信息
-          userInfo.nickName = wxUserInfo.nickName
-          userInfo.avatarUrl = wxUserInfo.avatarUrl
-          userInfo.province = wxUserInfo.province
-          userInfo.city = wxUserInfo.city
-          userInfo.country = wxUserInfo.country
+          glbUserInfo.nickName = wxUserInfo.nickName
+          glbUserInfo.avatarUrl = wxUserInfo.avatarUrl
+          glbUserInfo.province = wxUserInfo.province
+          glbUserInfo.city = wxUserInfo.city
+          glbUserInfo.country = wxUserInfo.country
+          glbUserInfo.gender = wxUserInfo.gender
 
-          that.globalData.userInfo = userInfo
+          that.globalData.userInfo = glbUserInfo
         })
       }
     })

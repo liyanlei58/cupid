@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
   <view slot="backText">返回</view>
-  <view slot="content">打分</view>
+  <view slot="content">心动时刻 - 人员详情</view>
 </cu-custom>
 
 

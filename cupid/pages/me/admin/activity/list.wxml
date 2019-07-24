@@ -7,7 +7,7 @@
 <block wx:else>
   <cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
     <view slot="backText">返回</view>
-    <view slot="content">管理活动</view>
+    <view slot="content">我的 - 活动管理</view>
   </cu-custom>
 
   <view class="padding-sm bg-white flex flex-direction margin-tb-sm">

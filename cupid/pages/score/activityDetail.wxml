@@ -7,7 +7,7 @@
 <block wx:else>
   <cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
     <view slot="backText">返回</view>
-    <view slot="content">活动详情</view>
+    <view slot="content">打分 - 活动详情</view>
   </cu-custom>
   <!-- 活动详情 -->
   <view class="cu-bar bg-white solid-bottom padding justify-center">

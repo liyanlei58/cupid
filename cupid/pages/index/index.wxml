@@ -13,13 +13,13 @@
     </view>
     <view class="{{PageCur=='activity'?('text-' + skin):'text-gray'}}">活动</view>
   </view>
-
+<!-- 
   <view class="action" bindtap="NavChange" data-cur="apply">
     <view class='cuIcon-cu-image'>
     <text class="cuIcon-selection{{PageCur=='apply'?('fill text-' + skin):' text-gray'}}"></text>
     </view>
     <view class="{{PageCur=='apply'?('text-' + skin):'text-gray'}}">报名</view>
-  </view>
+  </view> -->
 
   <view class="action" bindtap="NavChange" data-cur="score">
     <view class='cuIcon-cu-image'>

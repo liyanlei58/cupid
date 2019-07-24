@@ -10,7 +10,7 @@
   <scroll-view scroll-y="{{modalName==null}}" class="page {{modalName!=null?'show':''}}">
     <cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
       <view slot="backText">返回</view>
-      <view slot="content">活动详情</view>
+      <view slot="content">我的 - 活动详情</view>
     </cu-custom>
 
     <view class="cu-bar bg-white solid-bottom padding justify-center">

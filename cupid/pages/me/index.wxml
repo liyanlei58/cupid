@@ -4,7 +4,7 @@
 
 <view class="cu-list menu sm-border card-menu margin-top-xl">
   <view class="cu-item arrow" bindtap="toMeEdit">
-    <text class="text-black text-xl">我的资料</text>
+    <text class="text-black text-xl">我的信息</text>
   </view>
   
   <view class="cu-item arrow" bindtap="toMeMatch">

@@ -1,103 +1,132 @@
 const app = getApp();
 var common = require('../../js/common.js');
 var sysUserDb = require('../../js/db/sysUser.js');
+var init = require('../../js/cloud/init.js');
+var Const = require('../../js/const.js');
 Page({
   data: {
     //判断小程序的API，回调，参数，组件等是否在当前版本可用。
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    modalName: "activity"
+    modalName: "activity",
+    skin: Const.Background.PINK
   },
-  onLoad: function () {
+  onLoad: function() {
     
   },
   /**
-     * 生命周期函数--监听页面显示
-     */
-  onShow: function () {
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function() {
     //设置背景颜色
-      if (!app.globalData.skin) {
-          common.setBackground(app.globalData.openid, function (globalSkin) {
-              app.globalData.skin = globalSkin
-              that.setData({
-                  skin: globalSkin
-              })
-          })
-      }else{
-          var that = this
-          that.setData({
-              skin: app.globalData.skin
-          })
-      }
+    if (app.globalData.skin == null || app.globalData.skin == "") {
+      var that = this
+      that.setData({
+        skin: Const.Background.PINK
+      })
+    } 
 
   },
 
+  //获取openid
+  getOpenid: function(callback) {
+    var that = this
+    init.getOpenid(function(openid) {
+      app.globalData.openid = openid
+      callback(openid)
+    })
+  },
+
+
   //获取用户信息
-  bindGetUserInfo: function (e) {
+  bindGetUserInfo: function(e) {
+    var that = this
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
-      var that = this;
+      app.globalData.authed = true
       var wxUserInfo = e.detail.userInfo;
-      //检查是否存在，不存在则添加，存在则修改。插入db
-      sysUserDb.getUserByOpenid(app.globalData.openid, function (data) {
-        if (data.length == 0) {
-          //用户为空，添加
-          sysUserDb.addUser(wxUserInfo, function (dataId) {
-            if (dataId != null) {//添加成功
-              wxUserInfo._id = dataId;
-              app.globalData.userInfo = wxUserInfo;
-              console.log("userInfo: ", app.globalData.userInfo);
-              //用户已经授权过，跳转到首页
-              that.toHome();
-            } else {
-              console.log("add userWxInfo fail");
-            }
-          });
-        } else {
-          //用户不为空，修改
-          sysUserDb.updateUser(app.globalData, wxUserInfo, function (updateCount) {
-            console.log("update wxUserInfo", wxUserInfo);
-            if (updateCount > 0) {//修改成功
-              var oldUser = data[0];
+      //获取openid
+      that.getOpenid(function(openid) {
+        //检查是否存在，不存在则添加，存在则修改。插入db
+        sysUserDb.getUserByOpenid(openid, function(userList) {
+          if (userList.length == 0) {
+            //用户为空，添加
+            that.addUser(wxUserInfo, openid)
+          } else {
+            //用户不为空，修改
+            that.updateUser(wxUserInfo, userList)
+          }
+        })
+      })
 
-              oldUser.nickName = wxUserInfo.nickName;
-              oldUser.avatarUrl = wxUserInfo.avatarUrl;
-              oldUser.province = wxUserInfo.province;
-              oldUser.city = wxUserInfo.city;
-              oldUser.country = wxUserInfo.country;
-
-              app.globalData.userInfo = oldUser;
-              console.log("globalData userInfo: ", app.globalData.userInfo);
-              
-              //用户已经授权过，跳转到首页
-              that.toHome();
-            } else {
-              console.log("update userWxInfo fail");
-            }
-          });
-        }
-      });
-      
     } else {
       //用户按了拒绝按钮
-      wx.showModal({
-        title: '警告',
-        content: '您点击了拒绝授权，将无法进入小程序，请授权之后再进入!!!',
-        showCancel: false,
-        confirmText: '返回授权',
-        success: function (res) {
-          if (res.confirm) {
-            console.log('用户点击了“返回授权”')
-          }
-        }
-      })
+      that.rejectAuth()
     }
   },
 
+  //添加用户
+  addUser: function(wxUserInfo, openid) {
+    var that = this
+    sysUserDb.addUser(wxUserInfo, function(dataId) {
+      if (dataId != null) { //添加成功
+        wxUserInfo._id = dataId
+        wxUserInfo._openid = openid
+        app.globalData.userInfo = wxUserInfo;
+        //用户已经授权过，跳转到首页
+        that.toHome();
+      } else {
+        console.log("add userWxInfo fail");
+      }
+    })
+  },
+
+  //修改用户
+  updateUser: function(wxUserInfo, userList) {
+    var that = this
+    sysUserDb.updateUser(app.globalData, wxUserInfo, function(updateCount) {
+      console.log("update wxUserInfo", wxUserInfo);
+      if (updateCount > 0) { //修改成功
+        var oldUser = userList[0];
+
+        oldUser.nickName = wxUserInfo.nickName
+        oldUser.avatarUrl = wxUserInfo.avatarUrl
+        oldUser.province = wxUserInfo.province
+        oldUser.city = wxUserInfo.city
+        oldUser.country = wxUserInfo.country
+        oldUser.gender = wxUserInfo.gender
+
+        app.globalData.userInfo = oldUser
+        console.log("globalData userInfo: ", app.globalData.userInfo)
+
+        //用户已经授权过，跳转到首页
+        that.toHome();
+      } else {
+        console.log("update userWxInfo fail");
+      }
+    })
+  },
+
+
   //跳转到首页
-  toHome: function () {
+  toHome: function() {
     //授权成功后，跳转进入小程序首页
-    wx.switchTab({
-      url: '/pages/activity/list/list'
+    wx.redirectTo({
+      url: '../index/index'
+    })
+  },
+
+  //拒绝授权
+  rejectAuth: function () {
+    wx.showModal({
+      title: '警告',
+      content: '您点击了拒绝授权，将无法进入小程序，请授权之后再进入!!!',
+      showCancel: false,
+      confirmText: '返回授权',
+      success: function (res) {
+        if (res.confirm) {
+          console.log('用户点击了“返回授权”')
+        }
+      }
     })
   }
 

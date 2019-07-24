@@ -80,7 +80,7 @@ Page({
   viewDetail: function (e) {
     var ds = e.currentTarget.dataset;
     wx.navigateTo({
-      url: '/pages/love/person/person?personOpenid=' + ds.id
+      url: '/pages/love/person?personOpenid=' + ds.id
     })
   },
 

@@ -288,6 +288,10 @@ radio.radio[checked]::after {
 	border: 8px solid var(--white) !important;
 }
 
+.switch-sex .wx-switch-input:not([class*="bg-"]) {
+	background: var(--red) !important;
+}
+
 .switch-sex::after {
 	content: "\e71c";
 }

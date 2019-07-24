@@ -46,7 +46,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    
+    //设置背景颜色
+    var that = this
+    that.setData({
+      skin: app.globalData.skin
+    })
   },
 
   changeBackground: function (e) {
