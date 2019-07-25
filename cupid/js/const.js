@@ -27,6 +27,16 @@ module.exports = {
       VALUE: true,
       MSG: "有车"
     },
-  }
+  },
+  Score: {
+    Count: {
+      VALUE: 5,
+      MSG: "每次活动可以打分的人数"
+    },
+    Nice: {
+      VALUE: 60,
+      MSG: "有好感度的最低分"
+    }
+  },
   
 }

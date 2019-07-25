@@ -6,7 +6,6 @@ var common = require('./js/common.js');
 App({
   globalData: {
     openid: '',
-    scoreCount: 5, //一次活动最多给5个人打分
     niceScore: 60, //打分超过60，代表有好感
     userInfo: '',
     skin: '',
@@ -98,7 +97,7 @@ App({
       //pro-omk03
       wx.cloud.init({
         traceUser: true,
-        env: 'dev-789983'
+        env: 'pro-omk03'
       })
     }
 

@@ -63,6 +63,10 @@
       </view>
     </view>
     <view class="cu-list menu-avatar">
+      <view class="margin-top margin-left padding-sm cu-tag bg-{{skin}} radius text-df">
+        一次活动最多可以给
+        <text class='bg-green margin-lr-xs padding-xs'>{{scoreCount}}</text>人打分
+      </view>
       <view class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" wx:for="{{activityUserList}}" wx:key bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" bindtap="toPerson" data-id="{{item._openid}}" data-title="{{item.user.nickName}}">
 
 

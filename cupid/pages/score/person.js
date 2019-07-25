@@ -21,6 +21,7 @@ Page({
     person: {},
     score: {},
     isSelf: false,
+    scoredCount: 0,
     activity: {}
   },
   onLoad: function(options) {
@@ -50,6 +51,13 @@ Page({
     
     //获取人员信息、打分信息
     that.getPersonByOpenidAndScore(personOpenid, activityId);
+
+    //本次活动已给几人打过分
+    scoreDao.findCountByActivityIdAndOpenid(activityId, app.globalData.openid, function (total) {
+      that.setData({
+        scoredCount: total
+      })
+    });
 
   },
 
@@ -154,10 +162,10 @@ Page({
 
     scoreDao.findCountByActivityIdAndOpenid(activityId, app.globalData.openid, function(total) {
       //校验打分的条数,一次活动最多给5个人打分
-      if (total >= app.globalData.scoreCount) {
+      if (total >= Const.Score.Count.VALUE) {
         wx.showToast({
           icon: 'none',
-          title: '一次活动最多只能给' + scoreCount + '个人打分',
+          title: '一次活动最多只能给' + Const.Score.Count.VALUE + '个人打分',
         })
         return;
       }
@@ -230,24 +238,24 @@ Page({
     })
     console.log("score success");
 
-    //计算是否互相打分，只要有打分即可，不需要是同一个活动，并且分数都大于app.globalData.niceScore
+    //计算是否互相打分，只要有打分即可，不需要是同一个活动，并且分数都大于Const.Score.Nice.VALUE
     that.calculateMatch(oldScoreObj, newScoreObj);
 
   },
 
 
-  //计算是否匹配（A-->B)，A:当前用户，B：被打分的人员。匹配规则：两人互相打分，并且分数都大于app.globalData.niceScore
+  //计算是否匹配（A-->B)，A:当前用户，B：被打分的人员。匹配规则：两人互相打分，并且分数都大于Const.Score.Nice.VALUE
   calculateMatch: function(oldScoreObj, newScoreObj, matchCallback) {
     var that = this;
-    //(1)第一次打分 || 上次的分数低于app.globalData.niceScore（60）
-    if (oldScoreObj == null || oldScoreObj.score < app.globalData.niceScore) {
+    //(1)第一次打分 || 上次的分数低于Const.Score.Nice.VALUE（60）
+    if (oldScoreObj == null || oldScoreObj.score < Const.Score.Nice.VALUE) {
       that.oldScoreLtNicescore(newScoreObj)
       return
     }
 
-    //(2)上次的打分值不低于app.globalData.niceScore（60）
+    //(2)上次的打分值不低于Const.Score.Nice.VALUE（60）
     //(2-1)新的打分记录低于niceScore（60）
-    if (newScoreObj.score < app.globalData.niceScore) {
+    if (newScoreObj.score < Const.Score.Nice.VALUE) {
       that.oldScoreGteNiceScoreAndNewScoreLtNiceScore(oldScoreObj, newScoreObj);
       return
     }
@@ -261,7 +269,7 @@ Page({
   oldScoreLtNicescore: function(newScoreObj) {
     var that = this;
     //(1-1)新的打分记录低于niceScore（60）
-    if (newScoreObj.score < app.globalData.niceScore) {
+    if (newScoreObj.score < Const.Score.Nice.VALUE) {
       return;
     }
     //(1-2)新的打分记录不低于niceScore
@@ -290,7 +298,7 @@ Page({
           }
           //重新计算（B-- > A）的匹配
           //添加（B-- > A）的匹配
-          if (aToBMaxScoreObj.score < app.globalData.niceScore) {
+          if (aToBMaxScoreObj.score < Const.Score.Nice.VALUE) {
             //(2-1-2-1)匹配失败
             var length = matchList.length;
             for (var i = 0; i < length; i++) {
@@ -336,8 +344,8 @@ Page({
 
           //重新计算（B-- > A）的匹配
           //添加（B-- > A）的匹配
-          if (aToBMaxScoreObj.score < app.globalData.niceScore) {
-            //(2-2-2-1)匹配失败，这种情况不会存在，newScoreObj > app.globalData.niceScore
+          if (aToBMaxScoreObj.score < Const.Score.Nice.VALUE) {
+            //(2-2-2-1)匹配失败，这种情况不会存在，newScoreObj > Const.Score.Nice.VALUE
             return;
           }
 
@@ -369,7 +377,7 @@ Page({
       if (bToAMaxScoreObj == null){//匹配失败
         return
       }
-      if (bToAMaxScoreObj.score >= app.globalData.niceScore) {
+      if (bToAMaxScoreObj.score >= Const.Score.Nice.VALUE) {
         //匹配成功
         that.addMatch(newScoreAObj, bToAMaxScoreObj, true);
       }

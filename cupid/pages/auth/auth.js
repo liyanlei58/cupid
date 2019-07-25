@@ -42,7 +42,6 @@ Page({
     var that = this
     if (e.detail.userInfo) {
       //用户按了允许授权按钮
-      app.globalData.authed = true
       var wxUserInfo = e.detail.userInfo;
       //获取openid
       that.getOpenid(function(openid) {
@@ -53,6 +52,7 @@ Page({
             that.addUser(wxUserInfo, openid)
           } else {
             //用户不为空，修改
+            app.globalData.userInfo = userList[0]
             that.updateUser(wxUserInfo, userList)
           }
         })

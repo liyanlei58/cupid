@@ -63,13 +63,18 @@
       <view class="action">
         <text class="cuIcon-title text-{{skin}}"></text>打分
       </view>
+      <view class="action cu-tag bg-{{skin}} radius text-df">
+        本次活动已给
+          <text class='bg-green margin-lr-xs padding-xs'>{{scoredCount}}</text>人打过分
+      </view>
     </view>
     <form bindsubmit="score" bindreset="formReset" report-submit="true">
       <view class="bg-white padding">
 
         <view class="cu-tag bg-{{skin}} radius text-df">
           当两个人互相打分，并且分值都超过
-          <text class='bg-green margin-lr-xs padding-xs'>60</text>分，才能匹配成功</view>
+          <text class='bg-green margin-lr-xs padding-xs'>60</text>分，才能匹配成功
+        </view>
         <view class="cu-form-group">
           <view class="title">打分
             <text class='asterisk'>*</text>

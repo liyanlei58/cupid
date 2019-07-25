@@ -2,6 +2,7 @@ const app = getApp();
 var sysUserDb = require('../../js/db/sysUser.js');
 var activityDao = require('../../js/db/activity.js');
 var activityJoinDb = require('../../js/db/activityJoin.js');
+var Const = require('../../js/const.js');
 var pageSize = 20;
 Page({
   data: {
@@ -13,6 +14,7 @@ Page({
     userInfo: app.globalData.userInfo,
     joined: false,
     start: 0,
+    scoreCount: Const.Score.Count.VALUE,
     activityUserList: []
   },
   onLoad: function(options) {
