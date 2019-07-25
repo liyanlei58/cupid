@@ -14,8 +14,8 @@ module.exports = {
       dbQuery = dbQuery.skip(start);
     }
     dbQuery.limit(count).get().then(res => {
-      callback(res.data);
       console.log('[数据库] [查询活动] 成功: ', res);
+      callback(res.data);
     }).catch(err => {
       // wx.showToast({
       //   icon: 'none',

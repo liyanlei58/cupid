@@ -1,5 +1,6 @@
 const app = getApp();
 var scoreDb = require('../../js/db/score.js');
+var Const = require('../../js/const.js');
 var pageSize = 20;
 Component({
   options: {
@@ -9,10 +10,10 @@ Component({
   data: {
     skin: app.globalData.skin,
     modalName: "love",
-    scoreList: [],
     hasMore: false,
     showLoading: true,
-    start: 0
+    start: 0,
+    loveList:[]
   },
   
   lifetimes: {
@@ -22,7 +23,7 @@ Component({
       //查询被打分人员
       that.setData({
         skin: app.globalData.skin,
-        scoreList: [],
+        loveList: [],
         start: 0
       })
       that.findNextPage();
@@ -45,30 +46,71 @@ Component({
     findNextPage() {
       console.log("openid: ", app.globalData.openid);
       var that = this
-      scoreDb.findPageScoreByOpenid(app.globalData.openid, app.globalData.niceScore, that.data.start, pageSize, function (data) {
+      scoreDb.findPageScoreByOpenid(app.globalData.openid, Const.Score.Nice.VALUE, that.data.start, pageSize, function (data) {
         if (data.length == 0) {
           that.setData({
             showLoading: false,
             hasMore: false
           });
         } else {
-          if (data.length < pageSize) {
-            that.setData({
-              showLoading: false,
-              scoreList: that.data.scoreList.concat(data),
-              start: that.data.start + data.length,
-              hasMore: false
-            });
-          } else {
-            that.setData({
-              showLoading: false,
-              scoreList: that.data.scoreList.concat(data),
-              start: that.data.start + data.length,
-              hasMore: true
-            });
+          if (data.length < pageSize) {//最后一页
+            that.setLoveList(data, function(loveList){
+              that.setData({
+                showLoading: false,
+                loveList: loveList,
+                start: that.data.start + data.length,
+                hasMore: false
+              });
+            })
+          } else {//非最后一页
+            that.setLoveList(data, function (loveList) {
+              that.setData({
+                showLoading: false,
+                loveList: loveList,
+                start: that.data.start + data.length,
+                hasMore: true
+              });
+            })
           }
         }
       });
+    },
+
+    // ListTouch触摸开始
+    setLoveList(data, callback) {
+      var that = this
+      var lastLoveList = that.data.loveList
+      var lastLove = data[0];
+      var scoreList = []
+      if (lastLoveList.length > 0){//加载非第一页的内容
+        lastLove = lastLoveList.pop()
+        scoreList = lastLove.scoreList
+      }
+      var currActivity = lastLove.activity
+      // var loveListNext = []
+      for (var i = 0; i < data.length; i++) {
+        if (currActivity._id == data[i].activity._id) {//同一个活动
+          scoreList.push(data[i])
+        } else {//不同的活动
+          var love = {
+            activity: currActivity,
+            scoreList: scoreList
+          }
+          that.data.loveList.push(love)
+
+          currActivity = data[i].activity
+          scoreList = [data[i]];
+        }
+      }
+
+      //最后一次的组合
+      var love = {
+        activity: currActivity,
+        scoreList: scoreList
+      }
+      that.data.loveList.push(love)
+
+      callback(that.data.loveList)
     },
 
     viewDetail(e) {

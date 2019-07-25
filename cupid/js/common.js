@@ -34,14 +34,17 @@ module.exports = {
 
   //获取背景
   setBackground: function (openid, callback) {
-    var that = this
-    settingBg.getBgByOpenid(openid, function (bgList) {
-      var globalSkin = Const.Background.PINK
-      if (bgList.length > 0) {
-        globalSkin = bgList[0].skin
-      }
+    var globalSkin = Const.Background.PINK
+    if (openid == null || openid == ""){
       callback(globalSkin)
-    })
+    }else{
+      settingBg.getBgByOpenid(openid, function (bgList) {
+        if (bgList.length > 0) {
+          globalSkin = bgList[0].skin
+        }
+        callback(globalSkin)
+      })
+    }
   },
 
 }

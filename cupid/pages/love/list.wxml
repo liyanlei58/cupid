@@ -10,34 +10,39 @@
     <view slot="content">心动时刻</view>
   </cu-custom>
 
+
   <!-- 打分的人员 -->
   <scroll-view scroll-y="{{modalName==null}}" class="margin-top bg-white page {{modalName!=null?'show':''}} margin-bottom-xxl" bindscroll="scroll" bindscrolltolower="scrollToLower">
+<block wx:for="{{loveList}}" wx:key="{{index}}">
+    <view class="cu-bar bg-white solid-bottom margin-top" >
+      <view class="action text-{{skin}}">
+        <text class="cuIcon-activityfill"></text> {{item.activity.name}}
+      </view>
+      <view class="action">
+        {{item.activity.date}}
+      </view>
+    </view>
 
     <view class="cu-list menu-avatar">
-      <view class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" wx:for="{{scoreList}}" wx:key="{{index}}" bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" bindtap="viewDetail" data-id="{{item.user._openid}}"
-        data-title="{{item.activity._id}}">
+      <view class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" wx:for="{{item.scoreList}}" wx:key="{{index}}" wx:for-item="score" bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" bindtap="viewDetail" data-id="{{score.user._openid}}" data-title="{{score.user.nickName}}">
 
         <view class="cu-avatar radius xl">
-          <image src="{{item.user.photoId}}" mode="aspectFill" class='cu-avatar radius xxl'></image>
-          <view class="cu-tag badge {{item.user.gender % 2 == 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'}}"></view>
+          <image src="{{score.user.photoId}}" mode="aspectFill" class='cu-avatar radius xxl'></image>
+          <view class="cu-tag badge {{score.user.gender % 2 == 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'}}"></view>
         </view>
 
         <view class="content margin-bottom padding-lr">
           <view class="grid col-3">
-            <view class="text-{{skin}}">{{item.score}}分</view>
-            <view>{{item.user.nickName}}</view>
-            <view>{{item.user.birthday}}</view>
+            <view class="text-{{skin}}">{{score.score}}分</view>
+            <view>{{score.user.nickName}}</view>
+            <view>{{score.user.birthday}}</view>
 
-            <view>{{item.user.hometown[0]}}</view>
-            <view>{{item.user.hometown[1]}}</view>
-            <view>{{item.user.hometown[2]}}</view>
+            <view>{{score.user.hometown[0]}}</view>
+            <view>{{score.user.hometown[1]}}</view>
+            <view>{{score.user.hometown[2]}}</view>
 
-            <view>{{item.user.job}}</view>
-            <view>{{item.user.address}}</view>
-          </view>
-          <view class="grid col-3">
-            <view>{{item.activity.name}}</view>
-            <view>{{item.activity.date}}</view>
+            <view>{{score.user.job}}</view>
+            <view>{{score.user.address}}</view>
           </view>
         </view>
 
@@ -51,7 +56,10 @@
         </view>
       </view>
 
-      <!-- hasMore start -->
+      
+    </view>
+</block>
+<!-- hasMore start -->
       <view class='margin-tb'>
         <block wx:if="{{hasMore}}">
           <view class='cu-load'>
@@ -65,7 +73,6 @@
         </block>
       </view>
       <!-- hasMore end -->
-    </view>
   </scroll-view>
 
 </block>

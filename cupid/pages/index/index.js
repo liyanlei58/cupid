@@ -17,7 +17,9 @@ Page({
     })
 
     //背景设置
-    if (app.globalData.openid != "" && app.globalData.skin == "") {
+    if (app.globalData.skin == "") {
+      
+    }else{
       common.setBackground(app.globalData.openid, function (globalSkin) {
         app.globalData.skin = globalSkin
         that.setData({
