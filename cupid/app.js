@@ -174,9 +174,8 @@ App({
     })
   },
 
-  //跳转到授权页面
+  //未授权，跳转到授权页面
   toAuth: function() {
-    //授权成功后，跳转进入小程序首页
     wx.redirectTo({
       url: '/pages/auth/auth'
     })

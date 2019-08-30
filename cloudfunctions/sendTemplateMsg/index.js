@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
     const result = await cloud.openapi.templateMessage.send({
       touser: toUser,
       // page: 'pages/me/match/match',
-      page: 'pages/me/index/index',
+      page: 'pages/index/index?pageCur=me',
       data: {
         keyword1: {
           value: msgObj.nickName

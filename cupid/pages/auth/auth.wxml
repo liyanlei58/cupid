@@ -1,4 +1,4 @@
-<cu-custom bgColor="bg-gradual-pink" isBack="{{true}}">
+<cu-custom bgColor="bg-gradual-{{skin}}" isBack="{{true}}">
   <view slot="backText">返回</view>
   <view slot="content">授权</view>
 </cu-custom>

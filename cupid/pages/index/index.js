@@ -18,8 +18,6 @@ Page({
 
     //背景设置
     if (app.globalData.skin == "") {
-      
-    }else{
       common.setBackground(app.globalData.openid, function (globalSkin) {
         app.globalData.skin = globalSkin
         that.setData({
@@ -49,8 +47,8 @@ Page({
   },
   onShareAppMessage() {
     return {
-      title: 'ColorUI-高颜值的小程序UI组件库',
-      imageUrl: '/images/share.jpg',
+      title: '灵鸽 - 勾搭神器',
+      imageUrl: '/images/app.jpeg',
       path: '/pages/index/index'
     }
   },
